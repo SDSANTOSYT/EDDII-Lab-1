@@ -1,5 +1,5 @@
 from typing import Optional
-import Film
+from film import Film
 
 class Node:
     def __init__(self, data: Film):

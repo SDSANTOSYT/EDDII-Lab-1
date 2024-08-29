@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
-from Node import Node
-from Film import Film
+from node import Node
+from film import Film
 
 # Clase de arbol binario
 class BinaryTree:
