@@ -6,4 +6,4 @@ class Node:
         self.data = data
         self.left: Optional["Node"] = None
         self.right: Optional["Node"] = None
-        self.balance: float = 0
+        self.balance: int = 0
