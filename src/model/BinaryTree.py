@@ -2,10 +2,13 @@ from typing import Optional, Tuple
 from Node import Node
 from Film import Film
 
+# Clase de arbol binario
 class BinaryTree:
     def __init__(self, root: Optional["Node"] = None) -> None:
         self.root = root
+    # Recorridos
     
+    # Recorrido en perorden recursivo
     def preorder(self) -> None:
         self.__preorder_r(self.root)
         print()
@@ -16,6 +19,7 @@ class BinaryTree:
             self.__preorder_r(node.left)
             self.__preorder_r(node.right)
     
+    # Recorrido en inorden recursivo
     def inorder(self) -> None:
         self.__inorder_r(self.root)
         print()
@@ -25,7 +29,8 @@ class BinaryTree:
             self.__inorder_r(node.left)
             print(node.data.title, end = ' ')
             self.__inorder_r(node.right)
-            
+    
+    # Recorrido en postorden recursivo     
     def postorder(self) -> None:
         self.__postorder_r(self.root)
         print()
@@ -36,6 +41,7 @@ class BinaryTree:
             self.__postorder_r(node.right)
             print(node.data.title, end = ' ')
     
+    # Función de altura de un nodo
     def height(self) -> int:
         return self.__height_r(self.root)
     
@@ -44,10 +50,13 @@ class BinaryTree:
             return 0
         return 1 + max(self.__height_r(node.left), self.__height_r(node.right))
 
+
+# Clase de arbol binario de busqueda
 class BST(BinaryTree):
     def __init__(self, root: Optional["Node"] = None) -> None:
         super().__init__(root)
-        
+    
+    # Función de busqueda por el titulo   
     def search(self, title: str) -> Tuple[Optional["Node"], Optional["Node"]]:
         p, pad = self.root, None
         while p is not None:
@@ -61,6 +70,7 @@ class BST(BinaryTree):
                     p = p.right
         return p, pad
     
+    # Función de inserción
     def insert(self, data: Film) -> bool:
         to_insert = Node(data)
         if self.root is None:
@@ -77,6 +87,7 @@ class BST(BinaryTree):
                     pad.right = to_insert
                 return True
     
+    # Función de eliminación
     def delete(self, title: str, mode: bool = True) -> bool:
         p, pad = self.search(title)
         if p is not None:
@@ -118,12 +129,14 @@ class BST(BinaryTree):
             return True
         return False
 
+    # Función de predecesor
     def __pred(self, node: "Node") -> Tuple["Node", "Node", Optional["Node"]]:
         p, pad = node.left, node
         while p.right is not None:
             p, pad = p.right, p
         return p, pad, p.left
 
+    # Función de sucesor
     def __sus(self, node: "Node") -> Tuple["Node", "Node", Optional["Node"]]:
         p, pad = node.right, node
         while p.left is not None:
@@ -131,8 +144,11 @@ class BST(BinaryTree):
         return p, pad, p.right
     
 
+# Clase de arbol AVL
 class AVLT(BST):
     def __init__(self, root: Optional["Node"] = None) -> None:
         super().__init__(root)
+    # Rotaciones
     
-    def slr(self, node: Node)
+    def slr(self, node: Node) -> Node:
+        return None
