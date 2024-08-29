@@ -1,5 +1,6 @@
 from typing import Optional, Tuple
 from Node import Node
+from Film import Film
 
 class BinaryTree:
     def __init__(self, root: Optional["Node"] = None) -> None:
@@ -47,15 +48,91 @@ class BST(BinaryTree):
     def __init__(self, root: Optional["Node"] = None) -> None:
         super().__init__(root)
         
-    def search(self, data: str) -> Tuple[Optional["Node"], Optional["Node"]]:
+    def search(self, title: str) -> Tuple[Optional["Node"], Optional["Node"]]:
         p, pad = self.root, None
         while p is not None:
-            if data == p.data.title:
+            if title == p.data.title:
                 return p, pad
             else:
                 pad = p
-                if data < p.data:
+                if title < p.data.title:
                     p = p.left
                 else:
                     p = p.right
         return p, pad
+    
+    def insert(self, data: Film) -> bool:
+        to_insert = Node(data)
+        if self.root is None:
+            self.root = to_insert
+            return True
+        else:
+            p, pad = self.search(data.title)
+            if p is not None:
+                return False
+            else:
+                if data.title < pad.data.title:
+                    pad.left = to_insert
+                else:
+                    pad.right = to_insert
+                return True
+    
+    def delete(self, title: str, mode: bool = True) -> bool:
+        p, pad = self.search(title)
+        if p is not None:
+            if p.left is None and p.right is None:
+                if p == pad.left:
+                    pad.left = None
+                else:
+                    pad.right = None
+                del p
+            elif p.left is None and p.right is not None:
+                if p == pad.left:
+                    pad.left = p.right
+                else:
+                    pad.right = p.right
+                del p
+            elif p.left is not None and p.right is None:
+                if p == pad.left:
+                    pad.left = p.left
+                else:
+                    pad.right = p.left
+                del p
+            else:
+                if mode:
+                    pred, pad_pred, son_pred = self.__pred(p)
+                    p.data = pred.data
+                    if p == pad_pred:
+                        pad_pred.left = son_pred
+                    else:
+                        pad_pred.right = son_pred
+                    del pred
+                else:
+                    sus, pad_sus, son_sus = self.__sus(p)
+                    p.data = sus.data
+                    if p == pad_sus:
+                        pad_sus.right = son_sus
+                    else:
+                        pad_sus.left = son_sus
+                    del sus
+            return True
+        return False
+
+    def __pred(self, node: "Node") -> Tuple["Node", "Node", Optional["Node"]]:
+        p, pad = node.left, node
+        while p.right is not None:
+            p, pad = p.right, p
+        return p, pad, p.left
+
+    def __sus(self, node: "Node") -> Tuple["Node", "Node", Optional["Node"]]:
+        p, pad = node.right, node
+        while p.left is not None:
+            p, pad = p.left, p
+        return p, pad, p.right
+    
+
+class AVLT(BST):
+    def __init__(self, root: Optional["Node"] = None) -> None:
+        super().__init__(root)
+    
+    def slr(self, node: Node)
