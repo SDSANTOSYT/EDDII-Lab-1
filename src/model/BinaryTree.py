@@ -148,7 +148,69 @@ class BST(BinaryTree):
 class AVLT(BST):
     def __init__(self, root: Optional["Node"] = None) -> None:
         super().__init__(root)
-    # Rotaciones
+    def obtener_altura(self,nodo):
+        if not nodo:
+            return 0 
+        return nodo.altura
     
+    # Rotaciones
     def slr(self, node: Node) -> Node:
-        return None
+        aux = node.derecha 
+        i_aux = aux.izquierda
+        aux.izquierda = node
+        node.derecha = i_aux
+        node.altura = 1 + max (self.obtener_altura(node.izquierda), self.obtener_altura(node.derecha))
+        aux.altura = 1 + max (self.obtener_altura(aux.izquierda), self.obtener_altura(aux.derecha))
+        return aux
+    
+    def srr (self, node:Node) -> Node:
+        aux = node.izquierda
+        i_aux = aux.derecha
+        aux.derecha = node
+        aux.izquierda = i_aux
+        node.altura = 1 + max (self.obtener_altura(node.izquierda), self.obtener_altura(node.derecha))
+        aux.altura = 1 + max (self.obtener_altura(aux.izquierda), self.obtener_altura(aux.derecha))
+        return aux
+    
+    #Insertar/balancear 
+    def insert(self, data: Film) -> bool:
+        to_insert = Node(data)
+        if self.root is None:
+            self.root = to_insert
+            return True
+        else:
+            self.root = self._insert(self.root, to_insert)
+            return True
+        
+    def _insert(self, node:Node, to_insert:Node) -> Node:
+        if node is None:
+            return to_insert
+        elif to_insert.data.title < node.data.title:
+            node.left = self._insert(node.left, to_insert)
+        else:
+            node.right = self._insert(node.right, to_insert)
+
+        node.altura = 1 + max(self.obtener_altura(node.left), self.obtener_altura(node.right))
+
+        balance = self.obtener_balance(node)
+
+        # Caso 1 - Rotación izquierda-izquierda
+        if balance > 1 and to_insert.data.title < node.left.data.title:
+            return self.srr(node)
+
+        # Caso 2 - Rotación derecha-derecha
+        if balance < -1 and to_insert.data.title > node.right.data.title:
+            return self.slr(node)
+
+        # Caso 3 - Rotación izquierda-derecha
+        if balance > 1 and to_insert.data.title > node.left.data.title:
+            node.left = self.slr(node.left)
+            return self.srr(node)
+
+        # Caso 4 - Rotación derecha-izquierda
+        if balance < -1 and to_insert.data.title < node.right.data.title:
+            node.right = self.srr(node.right)
+            return self.slr(node)
+
+        return node
+    
