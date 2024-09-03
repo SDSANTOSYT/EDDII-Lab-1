@@ -168,8 +168,9 @@ class AVLT(BST):
         pad = self.search(node.data.title)[1]
         if node.balance == 2:
             self.calculate_balance(node.right)
+            
             # Rotación simple izquierda
-            if node.right.balance == 1:
+            if node.right.balance >= 0:
                 if pad is None:
                     self.root = self.slr(node)
                 else:
@@ -177,13 +178,21 @@ class AVLT(BST):
                         pad.right = self.slr(node)
                     else:
                         pad.left = self.slr(node)
-                
+            
             # Rotacion doble derecha - izquierda
+            else:
+                if pad is None:
+                    self.root = self.drlr(node)
+                else:
+                    if pad.right == node:
+                        pad.right = self.drlr(node)
+                    else:
+                        pad.left = self.drlr(node)
             
         elif node.balance == -2:
             self.calculate_balance(node.left)
             # Rotación simple derecha
-            if node.left.balance == -1:
+            if node.left.balance <= 0:
                 if pad is None:
                     self.root = self.srr(node)
                 else:
@@ -191,8 +200,16 @@ class AVLT(BST):
                         pad.right = self.srr(node)
                     else:
                         pad.left = self.srr(node)
-            # Rotación doble izquierda - derecha
             
+            # Rotación doble izquierda - derecha
+            else:
+                if pad is None:
+                    self.root = self.dlrr(node)
+                else:
+                    if pad.right == node:
+                        pad.right = self.dlrr(node)
+                    else:
+                        pad.left = self.dlrr(node)
     
     # Rotaciones
     def slr(self, node: Node) -> Node:
@@ -241,4 +258,25 @@ class AVLT(BST):
         else:
             return False
         
+    # Función para encontrar el padre del nodo
+    def find_parent(self, node: Node) -> Node:
+        return self.search(node.data.title)[1]
     
+    # Función para encontrar el abuelo de un nodo
+    def find_grandparent(self, node: Node) -> Node:
+        return self.find_parent(self.find_parent(node))
+    
+    # Función para encontrar el tio de un nodo
+    def find_uncle(self, node: Node) -> Node:
+        gp = self.find_grandparent(node)
+        if gp is not None:
+            return gp.left if gp.right == self.find_parent(node) else gp.right
+        return None
+
+    # Función para tener el nivel de un nodo
+    def calculate_level(self, node: Node) -> int:
+        level = 0
+        while node is not self.root:
+            level = level+1
+            node = self.find_parent(node)
+        return level
