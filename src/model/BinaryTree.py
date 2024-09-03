@@ -211,6 +211,10 @@ class AVLT(BST):
         node.right = self.srr(node.right)
         return(self.slr(node))
     
+    def dlrr (self, node: Node) -> Node:
+        node.left = self.slr(node.left)
+        return(self.srr(node))
+
     #Insertar/balancear 
     def insert(self, data: Film) -> bool:
         if super().insert(data):
