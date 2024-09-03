@@ -148,69 +148,93 @@ class BST(BinaryTree):
 class AVLT(BST):
     def __init__(self, root: Optional["Node"] = None) -> None:
         super().__init__(root)
-    def obtener_altura(self,nodo):
-        if not nodo:
-            return 0 
-        return nodo.altura
+    
+    # Función para calcular el balance de un nodo
+    def calculate_balance(self, node: Optional["Node"]) -> None:
+        node.balance = self.height(node.right) - self.height(node.left)
+    
+    # Función para encontrar nodo con desbalance
+    def find_disbalance(self, node: Node) -> Node:
+        while(node):
+            self.calculate_balance(node)
+            if abs(node.balance) == 2:
+                break
+            else:
+                node = self.search(node.data.title)[1]
+        return node
+    
+    # Función para rebalancear por medio de rotaciones
+    def rebalance(self, node: Node) -> None:
+        pad = self.search(node.data.title)[1]
+        if node.balance == 2:
+            self.calculate_balance(node.right)
+            # Rotación simple izquierda
+            if node.right.balance == 1:
+                if pad is None:
+                    self.root = self.slr(node)
+                else:
+                    if pad.right == node:
+                        pad.right = self.slr(node)
+                    else:
+                        pad.left = self.slr(node)
+                
+            # Rotacion doble derecha - izquierda
+            
+        elif node.balance == -2:
+            self.calculate_balance(node.left)
+            # Rotación simple derecha
+            if node.left.balance == -1:
+                if pad is None:
+                    self.root = self.srr(node)
+                else:
+                    if pad.right == node:
+                        pad.right = self.srr(node)
+                    else:
+                        pad.left = self.srr(node)
+            # Rotación doble izquierda - derecha
+            
     
     # Rotaciones
     def slr(self, node: Node) -> Node:
-        aux = node.derecha 
-        i_aux = aux.izquierda
-        aux.izquierda = node
-        node.derecha = i_aux
-        node.altura = 1 + max (self.obtener_altura(node.izquierda), self.obtener_altura(node.derecha))
-        aux.altura = 1 + max (self.obtener_altura(aux.izquierda), self.obtener_altura(aux.derecha))
+        aux = node.right 
+        node.right = aux.left
+        aux.left = node
         return aux
     
-    def srr (self, node:Node) -> Node:
-        aux = node.izquierda
-        i_aux = aux.derecha
-        aux.derecha = node
-        aux.izquierda = i_aux
-        node.altura = 1 + max (self.obtener_altura(node.izquierda), self.obtener_altura(node.derecha))
-        aux.altura = 1 + max (self.obtener_altura(aux.izquierda), self.obtener_altura(aux.derecha))
+    def srr(self, node:Node) -> Node:
+        aux = node.left
+        node.left = aux.right
+        aux.right = node
         return aux
+    
+    def drlr(self, node:Node) -> Node:
+        node.right = self.srr(node.right)
+        return(self.slr(node))
     
     #Insertar/balancear 
     def insert(self, data: Film) -> bool:
-        to_insert = Node(data)
-        if self.root is None:
-            self.root = to_insert
-            return True
+        if super().insert(data):
+            node = self.search(data.title)[0]
+            p = self.find_disbalance(node)
+            if p is not None:
+                self.rebalance(p)
+                return True
+            else:
+                return True
         else:
-            self.root = self._insert(self.root, to_insert)
-            return True
+            return False
+    
+    #Borrar/balancear
+    def delete(self, title: str) -> bool:
+        if super().delete(title):
+            node = self.search(title)[1]
+            p = self.find_disbalance(node)
+            if p is not None:
+                self.rebalance(p)
+                return True
+            else:
+                return True
+        else:
+            return False
         
-    def _insert(self, node:Node, to_insert:Node) -> Node:
-        if node is None:
-            return to_insert
-        elif to_insert.data.title < node.data.title:
-            node.left = self._insert(node.left, to_insert)
-        else:
-            node.right = self._insert(node.right, to_insert)
-
-        node.altura = 1 + max(self.obtener_altura(node.left), self.obtener_altura(node.right))
-
-        balance = self.obtener_balance(node)
-
-        # Caso 1 - Rotación izquierda-izquierda
-        if balance > 1 and to_insert.data.title < node.left.data.title:
-            return self.srr(node)
-
-        # Caso 2 - Rotación derecha-derecha
-        if balance < -1 and to_insert.data.title > node.right.data.title:
-            return self.slr(node)
-
-        # Caso 3 - Rotación izquierda-derecha
-        if balance > 1 and to_insert.data.title > node.left.data.title:
-            node.left = self.slr(node.left)
-            return self.srr(node)
-
-        # Caso 4 - Rotación derecha-izquierda
-        if balance < -1 and to_insert.data.title < node.right.data.title:
-            node.right = self.srr(node.right)
-            return self.slr(node)
-
-        return node
     
