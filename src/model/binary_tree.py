@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
-from node import Node
-from film import Film
+from .node import Node
+from .film import Film
 
 # Clase de arbol binario
 class BinaryTree:
@@ -42,8 +42,8 @@ class BinaryTree:
             print(node.data.title, end = ' ')
     
     # Función de altura de un nodo
-    def height(self) -> int:
-        return self.__height_r(self.root)
+    def height(self, node) -> int:
+        return self.__height_r(node)
     
     def __height_r(self, node: Optional["Node"]) -> int:
         if node is None:
@@ -153,21 +153,29 @@ class AVLT(BST):
     def calculate_balance(self, node: Optional["Node"]) -> None:
         node.balance = self.height(node.right) - self.height(node.left)
     
+    # Función para calcular el balance de todo el arbol
+    def calculate_balance_tree(self) -> None:
+        self.__calculate_balance_tree_r(self.root)
+    
+    def __calculate_balance_tree_r(self, node: Optional["Node"]) -> None:
+        if node is not None:
+            self.calculate_balance(node)
+            self.__calculate_balance_tree_r(node.left)
+            self.__calculate_balance_tree_r(node.right)
+    
     # Función para encontrar nodo con desbalance
     def find_disbalance(self, node: Node) -> Node:
         while(node):
-            self.calculate_balance(node)
             if abs(node.balance) == 2:
                 break
             else:
-                node = self.search(node.data.title)[1]
+                node = self.find_parent(node)
         return node
     
     # Función para rebalancear por medio de rotaciones
     def rebalance(self, node: Node) -> None:
         pad = self.search(node.data.title)[1]
         if node.balance == 2:
-            self.calculate_balance(node.right)
             
             # Rotación simple izquierda
             if node.right.balance >= 0:
@@ -210,6 +218,7 @@ class AVLT(BST):
                         pad.right = self.dlrr(node)
                     else:
                         pad.left = self.dlrr(node)
+        self.calculate_balance_tree()
     
     # Rotaciones
     def slr(self, node: Node) -> Node:
@@ -236,6 +245,7 @@ class AVLT(BST):
     def insert(self, data: Film) -> bool:
         if super().insert(data):
             node = self.search(data.title)[0]
+            self.calculate_balance_tree()
             p = self.find_disbalance(node)
             if p is not None:
                 self.rebalance(p)
@@ -280,3 +290,32 @@ class AVLT(BST):
             level = level+1
             node = self.find_parent(node)
         return level
+
+    # Función para visualizar el arbol en consola (QUITAR DESPUES)
+    def __repr__(self):
+        return self.__print_tree(self.root)
+
+    def __print_tree(self, node, level=0, side="root"):
+        if node is None:
+            return ""
+        
+        indent = " " * 4 * level
+
+        # Define colors
+        color_reset = "\033[0m"
+        color_root = "\033[1;32m"    
+        color_left = "\033[1;34m"    
+        color_right = "\033[1;31m"   
+        color_title = "\033[1;37m"   
+
+        if side == "root":
+            result = f"{indent}{color_root}(root){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
+        elif side == "left":
+            result = f"{indent}{color_left}(left){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
+        else:  # right
+            result = f"{indent}{color_right}(right){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
+        
+        result += self.__print_tree(node.left, level + 1, "left")
+        result += self.__print_tree(node.right, level + 1, "right")
+        
+        return result
