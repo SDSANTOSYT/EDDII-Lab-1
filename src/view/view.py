@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import *
 
+
 class AnimatedSideBar(ctk.CTkFrame):
     def __init__(self, parent, color, cuadro:ctk.CTkFrame):
         self.width=90
@@ -11,6 +12,15 @@ class AnimatedSideBar(ctk.CTkFrame):
         self.close=False
         self.optionsBtn=ctk.CTkButton(master=self,height=50, width=50, corner_radius=50,text="",command=self.Animation)
         self.optionsBtn.place(x=20, y=30)
+
+
+        self.buscaeBtn=ctk.CTkButton(master=self,height=50, width=50, corner_radius=50,text="")
+        self.buscaeBtn.place(x=20,y=110)
+
+        self.searchBar=ctk.CTkEntry(self, width=300, height=50, corner_radius=30,font=("Helvetica",20, "bold"), placeholder_text="Buscar")
+        self.searchBar.place(x=90,y=110)
+
+
         self.NameLbl=ctk.CTkLabel(master=self, text="Film Three",font=("Helvetica", 50, "bold"))
         self.NameLbl.place(x=90,y=30)
 
@@ -28,7 +38,7 @@ class AnimatedSideBar(ctk.CTkFrame):
 
     def increaseSize(self):
         if self.width<440:
-            self.width+=2
+            self.width+=10
             self.configure(width=self.width)
             self.cuadro.configure(width=1570-(20+(self.width-111)))
             self.cuadro.place(x=20+self.width)
@@ -36,7 +46,7 @@ class AnimatedSideBar(ctk.CTkFrame):
            
     def decreasSize(self):
         if self.width>90:
-            self.width-=2
+            self.width-=10
             self.configure(width=self.width)
             self.cuadro.configure(width=1570-(20+(self.width-111)))
             self.cuadro.place(x=20+self.width)
@@ -50,14 +60,11 @@ class App(ctk.CTk):
         self.geometry('1700x1000')
         ctk.set_appearance_mode('light')
 
-        self.marcoPrueba=ctk.CTkFrame(self, width=1570,height=980, corner_radius=25, fg_color="#E77070")
+        self.marcoPrueba=ctk.CTkFrame(self, width=1570,height=980, corner_radius=25, fg_color="#d4d3da")
         self.marcoPrueba.place(x=110,y=10)
         self.marcoPrueba.lower()
         self.bar=AnimatedSideBar(self, "#6d5eb2", self.marcoPrueba)
         self.bar.lift()
-
-        
-
         self.mainloop()
 
 if __name__=='__main__':
