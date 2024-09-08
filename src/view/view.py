@@ -19,9 +19,9 @@ class OptionWindow(ctk.CTkToplevel):
         self.insertEntry=ctk.CTkEntry(self.leftUpFrame, placeholder_text="Insertar pelicula", width=300,height=30)
         self.insertEntry.place(y=10,x=10)
         
-        self.result_frame = ctk.CTkFrame(self.leftUpFrame, width=485, height=390, fg_color="#d4d3da")
-        self.result_frame.place(y=50, x=10)
-        self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frame, self.data_list, self.result_labels))
+        self.result_frameI = ctk.CTkFrame(self.leftUpFrame, width=485, height=390, fg_color="#d4d3da")
+        self.result_frameI.place(y=50, x=10)
+        self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, self.data_list, self.result_labels))
         self.result_labels = []  # Lista para guardar los labels que muestran los resultados
 
 
@@ -33,7 +33,10 @@ class OptionWindow(ctk.CTkToplevel):
         #Widgets del frame Inferior Izquierdo
         self.DeleteEntry=ctk.CTkEntry(self.leftDownFrame, placeholder_text="Eliminar pelicula", width=300,height=30)
         self.DeleteEntry.place(y=10,x=10)
-        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frame, self.data_list, self.result_labels))
+        self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#d4d3da")
+        self.result_frameD.place(y=50, x=10)
+
+        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, self.data_list, self.result_labels))
         self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnDelete.place(y=10,x=320)
         
@@ -45,7 +48,11 @@ class OptionWindow(ctk.CTkToplevel):
         #Buscar
         self.searchEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="Buscar Pelicula", width=300,height=30)
         self.searchEntry.place(y=10,x=10)
-        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list(self.searchEntry, self.result_frame, self.data_list, self.result_labels))
+
+        self.result_frameE = ctk.CTkFrame(self.rightFrame, width=485, height=430, fg_color="#d4d3da")
+        self.result_frameE.place(y=160, x=10)
+
+        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list(self.searchEntry, self.result_frameE, self.data_list, self.result_labels))
         self.btnSearch=ctk.CTkButton(self.rightFrame, text="Buscar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnSearch.place(y=10,x=320)
         #Filtros
