@@ -1,9 +1,15 @@
+import sys,os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from controller.dataset_manager import get_movie_name
 import customtkinter as ctk
+
+
+
 class OptionWindow(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.data_list=["Película 1", "Película 2", "Película 3", "Film A", "Film B", "Cine XYZ", "Film C", "Another Film"]
+        self.data_list= get_movie_name()
         self.filtered_data=self.data_list.copy()
 
 

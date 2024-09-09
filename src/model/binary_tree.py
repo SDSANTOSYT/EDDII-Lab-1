@@ -7,7 +7,7 @@ class BinaryTree:
     def __init__(self, root: Optional["Node"] = None) -> None:
         self.root = root
     # Recorridos
-    
+
     # Recorrido en perorden recursivo
     def preorder(self) -> None:
         self.__preorder_r(self.root)
