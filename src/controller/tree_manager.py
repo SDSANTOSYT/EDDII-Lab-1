@@ -42,3 +42,4 @@ def search_filter(bool_year,year: int, per: bool, bool_ingreso,ingreso: float,ti
             if (title in film.title):
                 elements.append(Film)
     return elements
+

@@ -63,6 +63,18 @@ class BinaryTree:
             return 0
         return 1 + max(self.__height_r(node.left), self.__height_r(node.right))
 
+    # Recorrido por niveles recursivo
+    def levels(self) ->list[str]:
+        def inter (node: Optional["Node"], level, result):
+            if node is not None:
+                if len(result) <= level:
+                    result.append([])
+                result[level].append(node.data.title)
+                inter(node.left, level+1, result)
+                inter(node.right,level+1,result)
+        result = []
+        inter(self.root,0,result)
+        return[item for sublist in result for item in sublist]
 
 # Clase de arbol binario de busqueda
 class BST(BinaryTree):
