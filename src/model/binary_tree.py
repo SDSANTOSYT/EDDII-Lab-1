@@ -20,16 +20,16 @@ class BinaryTree:
             self.__preorder_r(node.right)
     
     # Función para guardar los elementos del arbol en una lista
-    def tree_in_list(self) -> list[str]:
+    def tree_in_list(self) -> list[Film]:
         elements = []
         self.__preorder_r2(self.root,elements)
         return elements
 
-    def __preorder_r2(self, node: Optional["Node"], elements: list[str]) -> list[str]:
+    def __preorder_r2(self, node: Optional["Node"], elements: list[Film]) -> list[Film]:
         if node is not None:
-            elements.append(node.data.title)
-            self.__preorder_r2(node.left)
-            self.__preorder_r2(node.right)
+            elements.append(node.data)
+            self.__preorder_r2(node.left, elements)
+            self.__preorder_r2(node.right, elements)
         return elements
     
     # Recorrido en inorden recursivo
@@ -105,16 +105,20 @@ class BST(BinaryTree):
         p, pad = self.search(title)
         if p is not None:
             if p.left is None and p.right is None:
-                if p == pad.left:
-                    pad.left = None
-                else:
-                    pad.right = None
+                if pad != None:
+                    if p == pad.left:
+                        pad.left = None
+                    else:
+                        pad.right = None
                 del p
+                self.root=None
+
             elif p.left is None and p.right is not None:
-                if p == pad.left:
-                    pad.left = p.right
-                else:
-                    pad.right = p.right
+                if pad != None:
+                    if p == pad.left:
+                        pad.left = p.right
+                    else:
+                        pad.right = p.right
                 del p
             elif p.left is not None and p.right is None:
                 if p == pad.left:

@@ -9,6 +9,6 @@ main_tree = AVLT()
 def add_film(title) -> None :
         main_tree.insert(search_movie(title)[0])
 
-def search_in_tree(title) -> list[str]:
+def search_in_tree(title) -> list[Film]:
     return main_tree.tree_in_list()
 

@@ -41,7 +41,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameD.place(y=50, x=10)
 
         self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(self.insertEntry.get()), self.result_labels))
-        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"))
+        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"),command=lambda: main_tree.delete(self.DeleteEntry.get()))
         self.btnDelete.place(y=10,x=320)
         
 
@@ -93,6 +93,9 @@ class OptionWindow(ctk.CTkToplevel):
         self.gfatherLbl.place(y=92)
         self.uncleLbl=ctk.CTkLabel(self.frameDownRigth, text="Tio del nodo", font=("Helvetica", 20, "bold"))
         self.uncleLbl.place(y=122)
+
+
+
 
 
     def changeSliderValue(self, value):
