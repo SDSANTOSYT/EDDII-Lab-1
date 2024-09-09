@@ -1,16 +1,15 @@
 import sys,os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from controller.dataset_manager import get_movie_name
+from controller.dataset_manager import *
+from controller.tree_manager import *
 import customtkinter as ctk
+
 
 
 
 class OptionWindow(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.data_list= get_movie_name()
-        self.filtered_data=self.data_list.copy()
 
 
         self.geometry("1000x1000")
@@ -24,14 +23,13 @@ class OptionWindow(ctk.CTkToplevel):
         #insertar nodos
         self.insertEntry=ctk.CTkEntry(self.leftUpFrame, placeholder_text="Insertar pelicula", width=300,height=30)
         self.insertEntry.place(y=10,x=10)
-        
         self.result_frameI = ctk.CTkFrame(self.leftUpFrame, width=485, height=390, fg_color="#d4d3da")
         self.result_frameI.place(y=50, x=10)
-        self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, self.data_list, self.result_labels))
+        self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, search_movie(self.insertEntry.get()), self.result_labels))
         self.result_labels = []  # Lista para guardar los labels que muestran los resultados
 
 
-        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40, font=("Helvetica", 20, "bold"))
+        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40, font=("Helvetica", 20, "bold"), command=lambda:add_film(self.insertEntry.get()))
         self.btnEntry.place(y=10,x=320)
         #lado inferior izquierdo
         self.leftDownFrame=ctk.CTkFrame(self,width=485,height=450,fg_color="#d4d3da")
@@ -42,7 +40,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#d4d3da")
         self.result_frameD.place(y=50, x=10)
 
-        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, self.data_list, self.result_labels))
+        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_movie(self.insertEntry.get()), self.result_labels))
         self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnDelete.place(y=10,x=320)
         
@@ -58,7 +56,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameE = ctk.CTkFrame(self.rightFrame, width=485, height=430, fg_color="#d4d3da")
         self.result_frameE.place(y=160, x=10)
 
-        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list(self.searchEntry, self.result_frameE, self.data_list, self.result_labels))
+        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list(self.searchEntry, self.result_frameE, search_movie(self.insertEntry.get()), self.result_labels))
         self.btnSearch=ctk.CTkButton(self.rightFrame, text="Buscar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnSearch.place(y=10,x=320)
         #Filtros
@@ -113,7 +111,7 @@ class OptionWindow(ctk.CTkToplevel):
         if not search_term:
             filtered_data = []
         else:
-            filtered_data = [item for item in data_list if search_term in item.lower()]
+            filtered_data = [item.title for item in data_list if search_term in item.title.lower()]
 
         # Crear un nuevo label para cada resultado filtrado
         result_labels.clear()  # Limpia la lista de labels antes de agregar nuevos
