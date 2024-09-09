@@ -1,4 +1,4 @@
-
+from PIL import Image
 from graphviz import Digraph
 import os
 
@@ -13,6 +13,22 @@ import re
 def escape_node_name(name):
     return re.sub(r'[:\s]', ' ', name)
 
+current_image = None
+def open_image(image_path):
+    global current_image
+    try:
+        # Cerrar la imagen abierta si existe
+        if current_image is not None:
+            current_image.close()
+        
+        # Intentar abrir la nueva imagen
+        current_image = Image.open(image_path)
+        return current_image
+    
+    except FileNotFoundError:
+        print(f"Error: El archivo '{image_path}' no existe.")
+        current_image = None
+        return None
 
 
 
@@ -22,7 +38,7 @@ class OptionWindow(ctk.CTkToplevel):
         super().__init__(*args, **kwargs)
 
 
-        self.geometry("1000x1000")
+        self.geometry("1400x1000")
         self.title("Operaciones")
         self.titleLabel = ctk.CTkLabel(self, text="Operaciones", font=("Helvetica", 50, "bold")).place(y=30,relx=0.5, anchor="center")
 
@@ -39,7 +55,8 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_labels = []  # Lista para guardar los labels que muestran los resultados
         self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40, font=("Helvetica", 20, "bold"), command=lambda:self.search_Ui(self.insertEntry.get()))
         self.btnEntry.place(y=10,x=320)
-
+        self.warning=ctk.CTkLabel(self.leftUpFrame, text="", font=("Helvetica", 12, "bold"))
+        self.warning.place(y=40,x=320)
 
         #lado inferior izquierdo
         self.leftDownFrame=ctk.CTkFrame(self,width=485,height=450,fg_color="#d4d3da")
@@ -74,20 +91,19 @@ class OptionWindow(ctk.CTkToplevel):
         self.var_percentCheck=ctk.BooleanVar()
         self.percentCheck=ctk.CTkCheckBox(self.rightFrame, text="Ingresos nacional menor a ingresos internacional", variable=self.var_percentCheck, width=50, height=50)
         self.percentCheck.place(y=50,x=10)
-
-        self.slider = ctk.CTkSlider(self.rightFrame, from_=0, to=10000000, command=self.changeSliderValue)
-        self.slider.set(0)
-        self.slider.place(y=100,x=10)
-        self.value=self.slider.get()
-        self.sliderValue= ctk.CTkLabel(self.rightFrame, text="", font=("Helvetica", 10, "bold"))
-        self.sliderValue.place(y=95,x=300)
-
+        self.var_intIncome=ctk.BooleanVar()
+        self.intIncomeCheck = ctk.CTkCheckBox(self. rightFrame, text="Ingresos internacionales mayores a", variable=self.var_intIncome,width=50,height=50)
+        self.intIncomeCheck.place(y=100,x=10)
+        self.intIncome= ctk.CTkEntry(self.rightFrame,placeholder_text=" Ingresos internacionales",width=190, height=50)
+        self.intIncome.place(y=100, x=270)
 
         self.var_yearCheck=ctk.BooleanVar()
         self.yearCheck=ctk.CTkCheckBox(self.rightFrame, text="Año", variable=self.var_yearCheck, width=50, height=50)
-        self.yearCheck.place(y=120,x=10)
-        self.yearEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="año de estreno", width=120,height=30)
-        self.yearEntry.place(y=130,x=80)
+        self.yearCheck.place(y=160,x=10)
+
+
+        self.yearEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="año de estreno", width=120,height=50)
+        self.yearEntry.place(y=160,x=80)
 
 
         #Cuadrado inferior derecho para dar
@@ -149,14 +165,22 @@ class OptionWindow(ctk.CTkToplevel):
             label.destroy()
 
     def delete_Ui(self, movie):
-        main_tree.delete(movie)
-        self.DeleteEntry.delete(0, "end")
-        self.DeleteEntry.configure(placeholder_text="Eliminar pelicula")
+        
+        try:
+             main_tree.delete(movie)
+             self.DeleteEntry.delete(0, "end")
+        except:
+            self.warning.configure(text="Error")
+        
 
     def search_Ui(self, movie):
-        add_film(movie)
-        self.insertEntry.delete(0, "end")
-        self.insertEntry.configure(placeholder_text="insertar pelicula")
+        if len(search_movie(self.insertEntry.get())) is 0:
+            self. warning.configure(text="no esta")
+        else:
+            add_film(movie)
+            self.insertEntry.delete(0, "end")
+            self. warning.configure(text="")
+        
 
    
 
@@ -212,6 +236,9 @@ class App(ctk.CTk):
     def drawTree(self):
 
         image_path = self.graph_tree(main_tree)
+        image = open_image(image_path)
+        if image:
+            image.show()  # Muestra la imagen si se abrió correctamente
         print(f"Árbol graficado en: {image_path}")
 
     def openOptionWindow(self):

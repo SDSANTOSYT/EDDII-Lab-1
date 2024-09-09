@@ -62,8 +62,20 @@ class BinaryTree:
         if node is None:
             return 0
         return 1 + max(self.__height_r(node.left), self.__height_r(node.right))
-    
-    
+
+    # Recorrido por niveles recursivo
+    def levels(self) ->list[str]:
+        def inter (node: Optional["Node"], level, result):
+            if node is not None:
+                if len(result) <= level:
+                    result.append([])
+                result[level].append(node.data.title)
+                inter(node.left, level+1, result)
+                inter(node.right,level+1,result)
+        result = []
+        inter(self.root,0,result)
+        return[item for sublist in result for item in sublist]
+
 # Clase de arbol binario de busqueda
 class BST(BinaryTree):
     def __init__(self, root: Optional["Node"] = None) -> None:
@@ -105,16 +117,17 @@ class BST(BinaryTree):
         p, pad = self.search(title)
         if p is not None:
             if p.left is None and p.right is None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = None
                     else:
                         pad.right = None
-                self.root=None
+                else:
+                    self.root=None
                 del p
 
             elif p.left is None and p.right is not None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = p.right
                     else:
@@ -123,7 +136,7 @@ class BST(BinaryTree):
                     self.root = p.right
                 del p
             elif p.left is not None and p.right is None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = p.left
                     else:
@@ -281,6 +294,7 @@ class AVLT(BST):
     def delete(self, title: str) -> bool:
         if super().delete(title):
             node = self.search(title)[1]
+            self.calculate_balance_tree()
             p = self.find_disbalance(node)
             if p is not None:
                 self.rebalance(p)
