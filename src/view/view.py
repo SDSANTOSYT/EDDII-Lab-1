@@ -89,16 +89,16 @@ class OptionWindow(ctk.CTkToplevel):
         self.btnSearch.place(y=10,x=320)
         #Filtros
         self.var_percentCheck=ctk.BooleanVar()
-        self.percentCheck=ctk.CTkCheckBox(self.rightFrame, text="Ingresos nacional menor a ingresos internacional", variable=self.var_percentCheck, width=50, height=50)
+        self.percentCheck=ctk.CTkCheckBox(self.rightFrame, text="Ingresos nacional menor a ingresos internacional", variable=self.var_percentCheck, width=50, height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.percentCheck.place(y=50,x=10)
         self.var_intIncome=ctk.BooleanVar()
-        self.intIncomeCheck = ctk.CTkCheckBox(self. rightFrame, text="Ingresos internacionales mayores a", variable=self.var_intIncome,width=50,height=50)
+        self.intIncomeCheck = ctk.CTkCheckBox(self. rightFrame, text="Ingresos internacionales mayores a", variable=self.var_intIncome,width=50,height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.intIncomeCheck.place(y=100,x=10)
         self.intIncome= ctk.CTkEntry(self.rightFrame,placeholder_text=" Ingresos internacionales",width=190, height=50)
         self.intIncome.place(y=100, x=270)
 
         self.var_yearCheck=ctk.BooleanVar()
-        self.yearCheck=ctk.CTkCheckBox(self.rightFrame, text="Año", variable=self.var_yearCheck, width=50, height=50)
+        self.yearCheck=ctk.CTkCheckBox(self.rightFrame, text="Año", variable=self.var_yearCheck, width=50, height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.yearCheck.place(y=160,x=10)
 
 
@@ -120,6 +120,12 @@ class OptionWindow(ctk.CTkToplevel):
         self.gfatherLbl.place(y=92)
         self.uncleLbl=ctk.CTkLabel(self.frameDownRigth, text="Tio del nodo", font=("Helvetica", 20, "bold"))
         self.uncleLbl.place(y=122)
+
+        #cuadro de verdad a la derecha
+
+        self.rigth=ctk.CTkFrame(self, width=390,height=900,fg_color="#d4d3da")
+        self.rigth.place(y=80,x=1000)
+        self.title2Label = ctk.CTkLabel(self.rigth, text="Datos", font=("Helvetica", 50, "bold")).place(y=30,relx=0.5, anchor="center")
 
 
 
