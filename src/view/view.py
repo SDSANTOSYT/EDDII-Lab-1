@@ -39,7 +39,8 @@ class OptionWindow(ctk.CTkToplevel):
 
 
         self.geometry("1600x1000")
-        self.title("Operaciones")
+        self.title("Operaciones")    
+        self.configure(fg_color="white")
         self.titleLabel = ctk.CTkLabel(self, text="Operaciones", font=("Times", 50, "bold")).place(y=40,relx=0.5, anchor="center")
 
         #lado superior izquierdo del cuadro
@@ -57,6 +58,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.btnEntry.place(y=10,x=320)
         self.warning=ctk.CTkLabel(self.leftUpFrame, text="", font=("Times", 12, "bold"))
         self.warning.place(y=40,x=320)
+        
 
         #lado inferior izquierdo
         self.leftDownFrame=ctk.CTkFrame(self,width=485,height=450,fg_color="#fbf2e1")
@@ -161,7 +163,6 @@ class OptionWindow(ctk.CTkToplevel):
         #tio del nodo
         self.uncleLbl=ctk.CTkLabel(self.frameDownRigth, text="Tio del nodo:", font=("Times", 20, "bold"))
         self.uncleLbl.place(y=122,x=10)
-
 
     def fillData(self):
             p,pa = main_tree.search(self.searchEntry.get())
