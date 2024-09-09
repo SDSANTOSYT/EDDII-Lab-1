@@ -1,8 +1,18 @@
+
+from graphviz import Digraph
+import os
+
 import sys,os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from controller.dataset_manager import *
 from controller.tree_manager import *
 import customtkinter as ctk
+
+import re
+
+def escape_node_name(name):
+    return re.sub(r'[:\s]', ' ', name)
+
 
 
 
@@ -148,6 +158,9 @@ class OptionWindow(ctk.CTkToplevel):
         self.insertEntry.delete(0, "end")
         self.insertEntry.configure(placeholder_text="insertar pelicula")
 
+   
+
+
 
 
 
@@ -160,7 +173,7 @@ class App(ctk.CTk):
         ctk.set_appearance_mode('light')
         self.btnOption=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Operaciones", fg_color="#6d5eb2",font=("Helvetica", 50, "bold"),command=self.openOptionWindow)
         self.btnOption.place(y=10,x=10)
-        self.btnSeeTree=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Ver Arbol", fg_color="#6d5eb2",font=("Helvetica", 50, "bold"))
+        self.btnSeeTree=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Ver Arbol", fg_color="#6d5eb2",font=("Helvetica", 50, "bold"),command=self.drawTree)
         self.btnSeeTree.place(y=10,x=850)
         self.Option_window=None
 
@@ -171,13 +184,43 @@ class App(ctk.CTk):
 
 
         self.mainloop()
+    def graph_tree(self, tree: AVLT, filename='binary_tree'):
+            def add_edges(graph, node: Node):
+                if node is None:
+                    return
+                if node.left:
+                    graph.node(escape_node_name(str(node.left.data.title)))
+                    graph.edge(escape_node_name(str(node.data.title)), escape_node_name(str(node.left.data.title)))
+                    add_edges(graph, node.left)
+                if node.right:
+                    graph.node(escape_node_name(str(node.right.data.title)))
+                    graph.edge(escape_node_name(str(node.data.title)), escape_node_name(str(node.right.data.title)))
+                    add_edges(graph, node.right)
 
+            graph = Digraph()
+            if tree.root:
+                graph.node(escape_node_name(str(tree.root.data.title)))
+                add_edges(graph, tree.root)
+            
+            # Eliminar archivo anterior si existe
+            if os.path.exists(f"{filename}.png"):
+                os.remove(f"{filename}.png")
+            
+            # Renderizar el nuevo gráfico
+            graph.render(filename, format='png', cleanup=True)
+            return f"{filename}.png"
+    def drawTree(self):
+
+        image_path = self.graph_tree(main_tree)
+        print(f"Árbol graficado en: {image_path}")
 
     def openOptionWindow(self):
         if self.Option_window is None or not self.Option_window.winfo_exists():
             self.Option_window = OptionWindow(self)  # create window if its None or destroyed
         else:
             self.Option_window.focus()  # if window exists focus it
+
+
 if __name__=='__main__':
     app=App()
 
