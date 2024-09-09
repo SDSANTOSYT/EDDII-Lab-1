@@ -38,7 +38,7 @@ class OptionWindow(ctk.CTkToplevel):
         super().__init__(*args, **kwargs)
 
 
-        self.geometry("1400x1000")
+        self.geometry("1600x1000")
         self.title("Operaciones")
         self.titleLabel = ctk.CTkLabel(self, text="Operaciones", font=("Times", 50, "bold")).place(y=40,relx=0.5, anchor="center")
 
@@ -49,7 +49,7 @@ class OptionWindow(ctk.CTkToplevel):
         #insertar nodos
         self.insertEntry=ctk.CTkEntry(self.leftUpFrame, placeholder_text="Insertar pelicula",font=("Times", 15,), width=300,height=30)
         self.insertEntry.place(y=10,x=10)
-        self.result_frameI = ctk.CTkFrame(self.leftUpFrame, width=485, height=390, fg_color="#fbf2e1")
+        self.result_frameI = ctk.CTkScrollableFrame(self.leftUpFrame, width=485, height=390, fg_color="#fbf2e1")
         self.result_frameI.place(y=50, x=10)
         self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, search_movie(self.insertEntry.get()), self.result_labels))
         self.result_labels = [] # Lista para guardar los labels que muestran los resultados
@@ -65,7 +65,7 @@ class OptionWindow(ctk.CTkToplevel):
         #Eliminar
         self.DeleteEntry=ctk.CTkEntry(self.leftDownFrame, placeholder_text="Eliminar pelicula", font=("Times", 15,),width=300,height=30)
         self.DeleteEntry.place(y=10,x=10)
-        self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#fbf2e1")
+        self.result_frameD = ctk.CTkScrollableFrame(self.leftDownFrame, width=485, height=390, fg_color="#fbf2e1")
         self.result_frameD.place(y=50, x=10)
 
         self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(), self.result_labels))
@@ -76,16 +76,19 @@ class OptionWindow(ctk.CTkToplevel):
         #lado central del cuadrado
         self.centerFrame=ctk.CTkFrame(self, width=485,height=900,fg_color="#fbf2e1")
         self.centerFrame.place(y=80,x=505)
-        #Widgets del frame derecho
+        #Widgets del frame central
         #Buscar
         self.searchEntry=ctk.CTkEntry(self.centerFrame,placeholder_text="Buscar Pelicula",font=("Times", 15,), width=300,height=30)
         self.searchEntry.place(y=10,x=10)
 
-        self.result_frameE = ctk.CTkFrame(self.centerFrame, width=485, height=380, fg_color="#fbf2e1")
+        self.result_frameE = ctk.CTkScrollableFrame(self.centerFrame, width=485, height=380, fg_color="#fbf2e1")
         self.result_frameE.place(y=220, x=10)
+        self.levelsBtn=ctk.CTkButton(self.centerFrame,text="Recorrido por niveles",fg_color="white",hover_color="#e9e9e9", text_color="#9f4154",border_color="#9f4154",corner_radius=40, font=("Times", 20, "bold"),command=self.show_data)
+        self.levelsBtn.place(y=870,relx=0.5,anchor="center")
+
 
         self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
-        self.btnSearch=ctk.CTkButton(self.centerFrame, text="Buscar",fg_color="white",hover_color="#e9e9e9", text_color="#9f4154",border_color="#9f4154",corner_radius=40, font=("Times", 20, "bold"))
+        self.btnSearch=ctk.CTkButton(self.centerFrame, text="Buscar",fg_color="white",hover_color="#e9e9e9", text_color="#9f4154",border_color="#9f4154",corner_radius=40, font=("Times", 20, "bold"), command=self.fillData)
         self.btnSearch.place(y=10,x=320)
         #Filtros
         self.var_percentCheck=ctk.BooleanVar()
@@ -106,65 +109,99 @@ class OptionWindow(ctk.CTkToplevel):
         self.yearEntry.place(y=160,x=80)
 
         #cuadro de derecha
-        self.rigthFrame=ctk.CTkFrame(self, width=390,height=900,fg_color="#fbf2e1")
+        self.rigthFrame=ctk.CTkFrame(self, width=590,height=900,fg_color="#fbf2e1")
         self.rigthFrame.place(y=80,x=1000)
         self.title2Label = ctk.CTkLabel(self.rigthFrame, text="Datos", font=("Times", 50, "bold")).place(y=30,relx=0.5, anchor="center")
 
         #Datos del nodo 
         #Titulo
-        self.movieTitleLbl=ctk.CTkLabel(self.rigthFrame,text="Titulo", font=("Times", 20, "bold"))
+        self.movieTitleLbl=ctk.CTkLabel(self.rigthFrame,text="Titulo:", font=("Times", 20, "bold"))
         self.movieTitleLbl.place(y=100,x=10)
 
         #Año
-        self.movieYearLbl=ctk.CTkLabel(self.rigthFrame, text="Año", font=("Times", 20, "bold"))
+        self.movieYearLbl=ctk.CTkLabel(self.rigthFrame, text="Año:", font=("Times", 20, "bold"))
         self.movieYearLbl.place(y=140, x=10)
         
         #Ingresos a nivel mundial
-        self.movieWorldwideEarningsLbl= ctk.CTkLabel(self.rigthFrame, text="Ingresos mundiales",font=("Times", 20, "bold"))
+        self.movieWorldwideEarningsLbl= ctk.CTkLabel(self.rigthFrame, text="Ingresos mundiales:",font=("Times", 20, "bold"))
         self.movieWorldwideEarningsLbl.place(y=180,x=10)
 
         #Ingresos a nivel nacional 
-        self.movieDomesticEarningsLbl=ctk.CTkLabel(self.rigthFrame, text="Ingresos nacionales",font=("Times", 20, "bold"))
+        self.movieDomesticEarningsLbl=ctk.CTkLabel(self.rigthFrame, text="Ingresos nacionales:",font=("Times", 20, "bold"))
         self.movieDomesticEarningsLbl.place(y=220,x=10)
 
         #Ingresos a nivel internacional
-        self.movieForeignEarningsLbl=ctk.CTkLabel(self.rigthFrame, text="Ingresos internacionales",font=("Times", 20, "bold"))
+        self.movieForeignEarningsLbl=ctk.CTkLabel(self.rigthFrame, text="Ingresos internacionales:",font=("Times", 20, "bold"))
         self.movieForeignEarningsLbl.place(y=260,x=10)
 
         #Porcentaje deganancias domestico
-        self.movieDomesticPercentEarnings=ctk.CTkLabel(self.rigthFrame, text='% de ingresos nacionales',font=("Times", 20, "bold"))
+        self.movieDomesticPercentEarnings=ctk.CTkLabel(self.rigthFrame, text='Porcentaje de ingresos nacionales:',font=("Times", 20, "bold"))
         self.movieDomesticPercentEarnings.place(y=300,x=10)
 
         #porcentaje a nivel internacional
-        self.movieForeignPercentEarnings=ctk.CTkLabel(self.rigthFrame, text="% de Ingresos internacionales",font=("Times", 20, "bold"))
+        self.movieForeignPercentEarnings=ctk.CTkLabel(self.rigthFrame, text="Porcentaje de Ingresos internacionales:",font=("Times", 20, "bold"))
         self.movieForeignPercentEarnings.place(y=340,x=10)
 
         #Cuadrado inferior derecho para dar datos
-        self.frameDownRigth=ctk.CTkFrame(self.rigthFrame,width=390, height=180, fg_color="#f7e5c4")
+        self.frameDownRigth=ctk.CTkFrame(self.rigthFrame,width=590, height=180, fg_color="#f7e5c4")
         self.frameDownRigth.place(y=720,x=0)
         #Datos del cuadrado
         #nivel del nodo
-        self.nodeLevelLbl=ctk.CTkLabel(self.frameDownRigth, text="Nivel del nodo", font=("Times", 20, "bold"))
-        self.nodeLevelLbl.place(y=2,x=0)
-        #blance del nodo
-        self.balanceLbl=ctk.CTkLabel(self.frameDownRigth, text="Factor de balanceo", font=("Times", 20, "bold"))
-        self.balanceLbl.place(y=32,x=0)
+        self.nodeLevelLbl=ctk.CTkLabel(self.frameDownRigth, text="Nivel del nodo:", font=("Times", 20, "bold"))
+        self.nodeLevelLbl.place(y=2,x=10)
+        #balance del nodo
+        self.balanceLbl=ctk.CTkLabel(self.frameDownRigth, text="Factor de balanceo:", font=("Times", 20, "bold"))
+        self.balanceLbl.place(y=32,x=10)
         #padre del nodo
-        self.fatherLbl=ctk.CTkLabel(self.frameDownRigth, text="Padre del nodo", font=("Times", 20, "bold"))
-        self.fatherLbl.place(y=62,x=0)
+        self.fatherLbl=ctk.CTkLabel(self.frameDownRigth, text="Padre del nodo:", font=("Times", 20, "bold"))
+        self.fatherLbl.place(y=62,x=10)
         #abuelo del nodo
-        self.gfatherLbl=ctk.CTkLabel(self.frameDownRigth, text="Abuelo del nodo", font=("Times", 20, "bold"))
-        self.gfatherLbl.place(y=92,x=0)
+        self.gfatherLbl=ctk.CTkLabel(self.frameDownRigth, text="Abuelo del nodo:", font=("Times", 20, "bold"))
+        self.gfatherLbl.place(y=92,x=10)
         #tio del nodo
-        self.uncleLbl=ctk.CTkLabel(self.frameDownRigth, text="Tio del nodo", font=("Times", 20, "bold"))
+        self.uncleLbl=ctk.CTkLabel(self.frameDownRigth, text="Tio del nodo:", font=("Times", 20, "bold"))
         self.uncleLbl.place(y=122,x=10)
 
 
-    def calc
+    def fillData(self):
+            p,pa = main_tree.search(self.searchEntry.get())
+            #mostrando datos de la pelicula
+
+            if p is not None:
+                self.movieTitleLbl.configure(text="Titulo: "+p.data.title)
+                self.movieYearLbl.configure(text="Año: "+str(p.data.year))
+                self.movieWorldwideEarningsLbl.configure(text="Ingresos mundiales: "+str(p.data.we))
+                self.movieDomesticEarningsLbl.configure(text="Ingresos nacionales: "+str(p.data.de))
+                self.movieForeignEarningsLbl.configure(text="Ingresos internacionales" +str(p.data.fe))
+                self.movieDomesticPercentEarnings.configure(text="Porcentaje de ingresos nacionales: "+str(p.data.dpe)+ "%")
+                self.movieForeignPercentEarnings.configure(text="Porcentaje de ingresos internacionales: "+str(p.data.fpe)+ "%")
 
 
+            #mostrando nivel
+            lvl=main_tree.calculate_level(p)
+            self.nodeLevelLbl.configure(text="Nivel del nodo: "+str(lvl))
+            #mostrando balance
+            self.balanceLbl.configure(text="Factor de balanceo: "+str(p.balance))
+            #mostrando padre
+            pad= main_tree.find_parent(p)
+            if(pad is not None):
+                self.fatherLbl.configure(text="Padre del nodo: "+pad.data.title)
+            else:
+                self.fatherLbl.configure(text="Padre del nodo: Nulo ")
+            #mostrando abuelo
 
-
+            #error con el abuelo cuando no existe de backend
+            granp= main_tree.find_grandparent(p)
+            if(granp is not None):
+                self.gfatherLbl.configure(text="Abuelo del nodo: "+granp.data.title)
+            else:
+                self.gfatherLbl.configure(text="Abuelo del nodo: Nulo ")
+            #mostrando tio
+            uncle=main_tree.find_uncle(p)
+            if uncle is not None:
+                self.uncleLbl.configure(text="Tio del nodo: "+uncle.data.title)
+            else:
+                self.uncleLbl.configure(texr="Tio del nodo: Nulo")
 
 
     def update_list(self, entry, result_frame, data_list, result_labels, event=None):
@@ -185,7 +222,7 @@ class OptionWindow(ctk.CTkToplevel):
         result_labels.clear()  # Limpia la lista de labels antes de agregar nuevos
         for idx, item in enumerate(filtered_data):
             label = ctk.CTkLabel(result_frame, text=item, font=("Helvetica", 16), width=280, height=30, anchor="w")
-            label.place(y=idx * 30, x=0)  # Ajustar la posición vertical de cada resultado
+            label.pack(anchor="w", padx=10, pady=5) 
             # Pasar el Entry como parámetro a on_item_click
             label.bind("<Button-1>", lambda e, text=item: self.on_item_click(text, entry, result_labels))  # Agregar evento de clic
             result_labels.append(label)
@@ -204,7 +241,7 @@ class OptionWindow(ctk.CTkToplevel):
         result_labels.clear()  # Limpia la lista de labels antes de agregar nuevos
         for idx, item in enumerate(filtered_data):
             label = ctk.CTkLabel(result_frame, text=item, font=("Helvetica", 16), width=280, height=30, anchor="w")
-            label.place(y=idx * 30, x=0)  # Ajustar la posición vertical de cada resultado
+            label.pack(anchor="w", padx=10, pady=5) 
             # Pasar el Entry como parámetro a on_item_click
             label.bind("<Button-1>", lambda e, text=item: self.on_item_click(text, entry, result_labels))  # Agregar evento de clic
             result_labels.append(label)
@@ -237,8 +274,32 @@ class OptionWindow(ctk.CTkToplevel):
             add_film(movie)
             self.insertEntry.delete(0, "end")
             self. warning.configure(text="")
-        
 
+    def show_data(self,data_list=None):
+        if data_list is None:
+            # Lista de ejemplo con muchos elementos
+            data_list = main_tree.levels()
+
+        # Crear una nueva ventana
+        new_window = ctk.CTkToplevel(self)
+        new_window.geometry("500x300")
+        new_window.title("Datos en Pestañas")
+
+        # Crear un Tabview en la nueva ventana
+        tabview = ctk.CTkTabview(new_window, width=450, height=250)
+        tabview.pack(pady=20)
+
+        # Crear una nueva pestaña dentro del Tabview
+        new_tab = tabview.add("Datos")
+
+        # Crear un frame con scroll dentro de la pestaña
+        scrollable_frame = ctk.CTkScrollableFrame(new_tab, width=450, height=200)
+        scrollable_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Agregar los datos de la lista al scrollable_frame
+        for idx, item in enumerate(data_list):
+            label = ctk.CTkLabel(scrollable_frame, text=f"{idx + 1}. {item}")
+            label.pack(anchor='w', padx=10, pady=5)
    
 
 
