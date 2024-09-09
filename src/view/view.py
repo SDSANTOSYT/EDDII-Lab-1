@@ -47,13 +47,13 @@ class OptionWindow(ctk.CTkToplevel):
         self.leftUpFrame.place(y=80,x=10)
         #Widgets del frame Superior Izquierdo
         #insertar nodos
-        self.insertEntry=ctk.CTkEntry(self.leftUpFrame, placeholder_text="Insertar pelicula", width=300,height=30)
+        self.insertEntry=ctk.CTkEntry(self.leftUpFrame, placeholder_text="Insertar pelicula",font=("Times", 15,), width=300,height=30)
         self.insertEntry.place(y=10,x=10)
         self.result_frameI = ctk.CTkFrame(self.leftUpFrame, width=485, height=390, fg_color="#fbf2e1")
         self.result_frameI.place(y=50, x=10)
         self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, search_movie(self.insertEntry.get()), self.result_labels))
-        self.result_labels = []  # Lista para guardar los labels que muestran los resultados
-        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40,fg_color="white", text_color="#9f4154",border_color="#9f4154",font=("Times", 20, "bold"), command=lambda:self.search_Ui(self.insertEntry.get()))
+        self.result_labels = [] # Lista para guardar los labels que muestran los resultados
+        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar",hover_color="#e9e9e9", corner_radius=40,fg_color="white", text_color="#9f4154",border_color="#9f4154",font=("Times", 20, "bold"), command=lambda:self.search_Ui(self.insertEntry.get()))
         self.btnEntry.place(y=10,x=320)
         self.warning=ctk.CTkLabel(self.leftUpFrame, text="", font=("Times", 12, "bold"))
         self.warning.place(y=40,x=320)
@@ -63,13 +63,13 @@ class OptionWindow(ctk.CTkToplevel):
         self.leftDownFrame.place(y=530,x=10)
         #Widgets del frame Inferior Izquierdo
         #Eliminar
-        self.DeleteEntry=ctk.CTkEntry(self.leftDownFrame, placeholder_text="Eliminar pelicula", width=300,height=30)
+        self.DeleteEntry=ctk.CTkEntry(self.leftDownFrame, placeholder_text="Eliminar pelicula", font=("Times", 15,),width=300,height=30)
         self.DeleteEntry.place(y=10,x=10)
         self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#fbf2e1")
         self.result_frameD.place(y=50, x=10)
 
         self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(), self.result_labels))
-        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40,fg_color="white", text_color="#9f4154",border_color="#9f4154",font=("Times", 20, "bold"),command=lambda: self.delete_Ui(self.DeleteEntry.get()))
+        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", hover_color="#e9e9e9",corner_radius=40,fg_color="white", text_color="#9f4154",border_color="#9f4154",font=("Times", 20, "bold"),command=lambda: self.delete_Ui(self.DeleteEntry.get()))
         self.btnDelete.place(y=10,x=320)
         
 
@@ -78,27 +78,27 @@ class OptionWindow(ctk.CTkToplevel):
         self.rightFrame.place(y=80,x=505)
         #Widgets del frame derecho
         #Buscar
-        self.searchEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="Buscar Pelicula", width=300,height=30)
+        self.searchEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="Buscar Pelicula",font=("Times", 15,), width=300,height=30)
         self.searchEntry.place(y=10,x=10)
 
         self.result_frameE = ctk.CTkFrame(self.rightFrame, width=485, height=380, fg_color="#fbf2e1")
         self.result_frameE.place(y=220, x=10)
 
         self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
-        self.btnSearch=ctk.CTkButton(self.rightFrame, text="Buscar",fg_color="white", text_color="#9f4154",border_color="#9f4154",corner_radius=40, font=("Times", 20, "bold"))
+        self.btnSearch=ctk.CTkButton(self.rightFrame, text="Buscar",fg_color="white",hover_color="#e9e9e9", text_color="#9f4154",border_color="#9f4154",corner_radius=40, font=("Times", 20, "bold"))
         self.btnSearch.place(y=10,x=320)
         #Filtros
         self.var_percentCheck=ctk.BooleanVar()
-        self.percentCheck=ctk.CTkCheckBox(self.rightFrame, text="Ingresos nacional menor a ingresos internacional",font=("Times", 15,),variable=self.var_percentCheck, width=50, height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
+        self.percentCheck=ctk.CTkCheckBox(self.rightFrame, text="Ingresos nacional menor a ingresos internacional",font=("Times", 15,),variable=self.var_percentCheck, hover_color= "#9f4154" ,width=50, height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.percentCheck.place(y=50,x=10)
         self.var_intIncome=ctk.BooleanVar()
-        self.intIncomeCheck = ctk.CTkCheckBox(self. rightFrame, text="Ingresos internacionales mayores a",font=("Times", 17,), variable=self.var_intIncome,width=50,height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
+        self.intIncomeCheck = ctk.CTkCheckBox(self. rightFrame, text="Ingresos internacionales mayores a",font=("Times", 17,), variable=self.var_intIncome,width=50,hover_color="#9f4154",height=50, command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.intIncomeCheck.place(y=100,x=10)
         self.intIncome= ctk.CTkEntry(self.rightFrame,placeholder_text=" Ingresos internacionales",width=190, height=50, font=("Times", 17,))
         self.intIncome.place(y=100, x=270)
 
         self.var_yearCheck=ctk.BooleanVar()
-        self.yearCheck=ctk.CTkCheckBox(self.rightFrame, text="Año", variable=self.var_yearCheck, width=50, height=50, font=("Times", 17,), command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
+        self.yearCheck=ctk.CTkCheckBox(self.rightFrame, text="Año", variable=self.var_yearCheck, width=50, height=50, hover_color= "#9f4154",font=("Times", 17,), command= lambda: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.yearCheck.place(y=160,x=10)
 
 
@@ -122,7 +122,6 @@ class OptionWindow(ctk.CTkToplevel):
         self.uncleLbl.place(y=122)
 
         #cuadro de verdad a la derecha
-
         self.rigth=ctk.CTkFrame(self, width=390,height=900,fg_color="#fbf2e1")
         self.rigth.place(y=80,x=1000)
         self.title2Label = ctk.CTkLabel(self.rigth, text="Datos", font=("Times", 50, "bold")).place(y=30,relx=0.5, anchor="center")
@@ -218,9 +217,9 @@ class App(ctk.CTk):
         self.title("Film Three")
         self.geometry('1700x1000')
         ctk.set_appearance_mode('light')
-        self.btnOption=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Operaciones", fg_color="#6d5eb2",font=("Helvetica", 50, "bold"),command=self.openOptionWindow)
+        self.btnOption=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Operaciones",hover_color="#b26877", fg_color="#9f4154",font=("Times", 50, "bold"),command=self.openOptionWindow)
         self.btnOption.place(y=10,x=10)
-        self.btnSeeTree=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Ver Arbol", fg_color="#6d5eb2",font=("Helvetica", 50, "bold"),command=self.drawTree)
+        self.btnSeeTree=ctk.CTkButton(self,width=830,height=980,corner_radius=50,text="Ver Arbol", hover_color= "#b26877",fg_color="#9f4154",font=("Times", 50, "bold"),command=self.drawTree)
         self.btnSeeTree.place(y=10,x=850)
         self.Option_window=None
 
