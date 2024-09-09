@@ -305,8 +305,11 @@ class AVLT(BST):
             return False
         
     # Función para encontrar el padre del nodo
-    def find_parent(self, node: Node) -> Node:
-        return self.search(node.data.title)[1]
+    def find_parent(self, node: Optional["Node"]) -> Node:
+        if node is not None:
+            return self.search(node.data.title)[1] if self.search(node.data.title)[1] is not None else None
+        else:
+            return None
     
     # Función para encontrar el abuelo de un nodo
     def find_grandparent(self, node: Node) -> Node:

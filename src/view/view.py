@@ -173,7 +173,7 @@ class OptionWindow(ctk.CTkToplevel):
                 self.movieYearLbl.configure(text="Año: "+str(p.data.year))
                 self.movieWorldwideEarningsLbl.configure(text="Ingresos mundiales: "+str(p.data.we))
                 self.movieDomesticEarningsLbl.configure(text="Ingresos nacionales: "+str(p.data.de))
-                self.movieForeignEarningsLbl.configure(text="Ingresos internacionales" +str(p.data.fe))
+                self.movieForeignEarningsLbl.configure(text="Ingresos internacionales: " +str(p.data.fe))
                 self.movieDomesticPercentEarnings.configure(text="Porcentaje de ingresos nacionales: "+str(p.data.dpe)+ "%")
                 self.movieForeignPercentEarnings.configure(text="Porcentaje de ingresos internacionales: "+str(p.data.fpe)+ "%")
 
@@ -202,7 +202,7 @@ class OptionWindow(ctk.CTkToplevel):
             if uncle is not None:
                 self.uncleLbl.configure(text="Tio del nodo: "+uncle.data.title)
             else:
-                self.uncleLbl.configure(texr="Tio del nodo: Nulo")
+                self.uncleLbl.configure(text="Tio del nodo: Nulo")
 
 
     def update_list(self, entry, result_frame, data_list, result_labels, event=None):
