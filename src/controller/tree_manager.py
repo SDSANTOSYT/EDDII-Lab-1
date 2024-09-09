@@ -12,3 +12,9 @@ def add_film(title) -> None :
 def search_in_tree(title) -> list[Film]:
     return main_tree.tree_in_list()
 
+def search_filter(year: int, per: bool, ingreso: float)-> list[Film]:
+    elements = []
+    for Film in search_in_tree():
+        if ((year == Film.year) or (per == True) or (Film.fe <= ingreso)):
+            elements.append(Film)
+    return elements
