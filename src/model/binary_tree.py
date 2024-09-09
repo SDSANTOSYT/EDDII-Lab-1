@@ -62,8 +62,8 @@ class BinaryTree:
         if node is None:
             return 0
         return 1 + max(self.__height_r(node.left), self.__height_r(node.right))
-
-
+    
+    
 # Clase de arbol binario de busqueda
 class BST(BinaryTree):
     def __init__(self, root: Optional["Node"] = None) -> None:
