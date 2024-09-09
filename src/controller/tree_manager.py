@@ -7,6 +7,8 @@ from .dataset_manager import *
 main_tree = AVLT()
 
 def add_film(title) -> None :
-    for film in search_movie(title):
-        main_tree.insert(film)
+        main_tree.insert(search_movie(title)[0])
+
+def search_in_tree(title) -> list[str]:
+    return main_tree.tree_in_list()
 

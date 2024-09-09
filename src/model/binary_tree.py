@@ -19,6 +19,19 @@ class BinaryTree:
             self.__preorder_r(node.left)
             self.__preorder_r(node.right)
     
+    # Función para guardar los elementos del arbol en una lista
+    def tree_in_list(self) -> list[str]:
+        elements = []
+        self.__preorder_r2(self.root,elements)
+        return elements
+
+    def __preorder_r2(self, node: Optional["Node"], elements: list[str]) -> list[str]:
+        if node is not None:
+            elements.append(node.data.title)
+            self.__preorder_r2(node.left)
+            self.__preorder_r2(node.right)
+        return elements
+    
     # Recorrido en inorden recursivo
     def inorder(self) -> None:
         self.__inorder_r(self.root)

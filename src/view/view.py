@@ -40,7 +40,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#d4d3da")
         self.result_frameD.place(y=50, x=10)
 
-        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_movie(self.insertEntry.get()), self.result_labels))
+        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(self.insertEntry.get()), self.result_labels))
         self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnDelete.place(y=10,x=320)
         
