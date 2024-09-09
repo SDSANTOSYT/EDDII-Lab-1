@@ -105,16 +105,17 @@ class BST(BinaryTree):
         p, pad = self.search(title)
         if p is not None:
             if p.left is None and p.right is None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = None
                     else:
                         pad.right = None
-                self.root=None
+                else:
+                    self.root=None
                 del p
 
             elif p.left is None and p.right is not None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = p.right
                     else:
@@ -123,7 +124,7 @@ class BST(BinaryTree):
                     self.root = p.right
                 del p
             elif p.left is not None and p.right is None:
-                if pad != None:
+                if pad is not None:
                     if p == pad.left:
                         pad.left = p.left
                     else:
@@ -281,6 +282,7 @@ class AVLT(BST):
     def delete(self, title: str) -> bool:
         if super().delete(title):
             node = self.search(title)[1]
+            self.calculate_balance_tree()
             p = self.find_disbalance(node)
             if p is not None:
                 self.rebalance(p)
