@@ -27,21 +27,22 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameI.place(y=50, x=10)
         self.insertEntry.bind("<KeyRelease>", lambda event: self.update_list(self.insertEntry, self.result_frameI, search_movie(self.insertEntry.get()), self.result_labels))
         self.result_labels = []  # Lista para guardar los labels que muestran los resultados
-
-
-        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40, font=("Helvetica", 20, "bold"), command=lambda:add_film(self.insertEntry.get()))
+        self.btnEntry=ctk.CTkButton(self.leftUpFrame, text="Insertar", corner_radius=40, font=("Helvetica", 20, "bold"), command=lambda:self.search_Ui(self.insertEntry.get()))
         self.btnEntry.place(y=10,x=320)
+
+
         #lado inferior izquierdo
         self.leftDownFrame=ctk.CTkFrame(self,width=485,height=450,fg_color="#d4d3da")
         self.leftDownFrame.place(y=530,x=10)
         #Widgets del frame Inferior Izquierdo
+        #Eliminar
         self.DeleteEntry=ctk.CTkEntry(self.leftDownFrame, placeholder_text="Eliminar pelicula", width=300,height=30)
         self.DeleteEntry.place(y=10,x=10)
         self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#d4d3da")
         self.result_frameD.place(y=50, x=10)
 
         self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(self.insertEntry.get()), self.result_labels))
-        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"),command=lambda: main_tree.delete(self.DeleteEntry.get()))
+        self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"),command=lambda: self.delete_Ui(self.DeleteEntry.get()))
         self.btnDelete.place(y=10,x=320)
         
 
@@ -128,6 +129,7 @@ class OptionWindow(ctk.CTkToplevel):
 
 
     def on_item_click(self, text, entry, result_labels):
+
         # Colocar el texto seleccionado en el Entry y borrar la lista de resultados
         entry.delete(0, "end")
         entry.insert(0, text)
@@ -135,6 +137,16 @@ class OptionWindow(ctk.CTkToplevel):
         # Limpiar los resultados después de hacer clic en uno
         for label in result_labels:
             label.destroy()
+
+    def delete_Ui(self, movie):
+        main_tree.delete(movie)
+        self.DeleteEntry.delete(0, "end")
+        self.DeleteEntry.configure(placeholder_text="Eliminar pelicula")
+
+    def search_Ui(self, movie):
+        add_film(movie)
+        self.insertEntry.delete(0, "end")
+        self.insertEntry.configure(placeholder_text="insertar pelicula")
 
 
 
