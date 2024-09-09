@@ -68,7 +68,7 @@ class OptionWindow(ctk.CTkToplevel):
         self.result_frameD = ctk.CTkFrame(self.leftDownFrame, width=485, height=390, fg_color="#d4d3da")
         self.result_frameD.place(y=50, x=10)
 
-        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(self.insertEntry.get()), self.result_labels))
+        self.DeleteEntry.bind("<KeyRelease>", lambda event: self.update_list(self.DeleteEntry, self.result_frameD, search_in_tree(), self.result_labels))
         self.btnDelete=ctk.CTkButton(self.leftDownFrame, text="Eliminar", corner_radius=40, font=("Helvetica", 20, "bold"),command=lambda: self.delete_Ui(self.DeleteEntry.get()))
         self.btnDelete.place(y=10,x=320)
         
@@ -81,10 +81,10 @@ class OptionWindow(ctk.CTkToplevel):
         self.searchEntry=ctk.CTkEntry(self.rightFrame,placeholder_text="Buscar Pelicula", width=300,height=30)
         self.searchEntry.place(y=10,x=10)
 
-        self.result_frameE = ctk.CTkFrame(self.rightFrame, width=485, height=430, fg_color="#d4d3da")
-        self.result_frameE.place(y=160, x=10)
+        self.result_frameE = ctk.CTkFrame(self.rightFrame, width=485, height=380, fg_color="#6d5eb2")
+        self.result_frameE.place(y=220, x=10)
 
-        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list(self.searchEntry, self.result_frameE, search_movie(self.insertEntry.get()), self.result_labels))
+        self.searchEntry.bind("<KeyRelease>", lambda event: self.update_list2(self.searchEntry, self.result_frameE, search_filter(bool(self.yearCheck.get()),self.yearEntry.get(),bool(self.percentCheck.get()),bool(self.intIncomeCheck.get()),self.intIncome.get(),self.searchEntry.get()), self.result_labels))
         self.btnSearch=ctk.CTkButton(self.rightFrame, text="Buscar", corner_radius=40, font=("Helvetica", 20, "bold"))
         self.btnSearch.place(y=10,x=320)
         #Filtros
@@ -125,8 +125,6 @@ class OptionWindow(ctk.CTkToplevel):
 
 
 
-    def changeSliderValue(self, value):
-        self.sliderValue.configure(text=str(value))
 
 
     def update_list(self, entry, result_frame, data_list, result_labels, event=None):
@@ -142,6 +140,25 @@ class OptionWindow(ctk.CTkToplevel):
             filtered_data = []
         else:
             filtered_data = [item.title for item in data_list if search_term in item.title.lower()]
+
+        # Crear un nuevo label para cada resultado filtrado
+        result_labels.clear()  # Limpia la lista de labels antes de agregar nuevos
+        for idx, item in enumerate(filtered_data):
+            label = ctk.CTkLabel(result_frame, text=item, font=("Helvetica", 16), width=280, height=30, anchor="w")
+            label.place(y=idx * 30, x=0)  # Ajustar la posición vertical de cada resultado
+            # Pasar el Entry como parámetro a on_item_click
+            label.bind("<Button-1>", lambda e, text=item: self.on_item_click(text, entry, result_labels))  # Agregar evento de clic
+            result_labels.append(label)
+    def update_list2(self, entry, result_frame, data_list, result_labels, event=None):
+        # Limpiar la lista actual de labels
+        for label in result_labels:
+            label.destroy()
+
+        # Filtrar la lista según el texto en el Entry especificado
+        search_term = entry.get().lower()
+        
+        # Si el texto de búsqueda está vacío, no mostrar resultados
+        filtered_data = [item.title for item in data_list if search_term in item.title.lower()]
 
         # Crear un nuevo label para cada resultado filtrado
         result_labels.clear()  # Limpia la lista de labels antes de agregar nuevos
