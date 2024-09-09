@@ -110,8 +110,8 @@ class BST(BinaryTree):
                         pad.left = None
                     else:
                         pad.right = None
-                del p
                 self.root=None
+                del p
 
             elif p.left is None and p.right is not None:
                 if pad != None:
@@ -119,12 +119,17 @@ class BST(BinaryTree):
                         pad.left = p.right
                     else:
                         pad.right = p.right
+                else:
+                    self.root = p.right
                 del p
             elif p.left is not None and p.right is None:
-                if p == pad.left:
-                    pad.left = p.left
+                if pad != None:
+                    if p == pad.left:
+                        pad.left = p.left
+                    else:
+                        pad.right = p.left
                 else:
-                    pad.right = p.left
+                    self.root = p.left
                 del p
             else:
                 if mode:
