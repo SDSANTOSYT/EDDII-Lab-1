@@ -15,4 +15,11 @@ def search_movie(title: str) -> list[Film] :
                 films.append(Film(line[0],line[1],line[2],line[3],line[4],line[5],line[6]))
         return films
 
-
+def get_movie_name() -> list[str] :
+    movie_titles = []
+    with open('src/dataset_movies.csv',"r",encoding="utf-8") as dataset:
+        reader = csv.reader(dataset)
+        next(reader)
+        for line in reader:
+            movie_titles.append(line[0])
+    return movie_titles
