@@ -367,6 +367,3 @@ class App(ctk.CTk):
             self.Option_window.focus()  # if window exists focus it
 
 
-if __name__=='__main__':
-    app=App()
-

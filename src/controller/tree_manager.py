@@ -8,7 +8,9 @@ main_tree = AVLT()
 
 # Función que añade una pelicula desde el dataset al arbol
 def add_film(title) -> None :
-        main_tree.insert(search_movie(title)[0])
+        for film in search_movie(title):
+            if film.title == title:
+                main_tree.insert(film)
 
 # Función que devuelve el arbol en forma de lista
 def search_in_tree() -> list[Film]:
@@ -16,11 +18,10 @@ def search_in_tree() -> list[Film]:
 
 # Función que realiza una busqueda filtrada y devuelve una lista con los resultados
 def search_filter(bool_year,year: int, per: bool, bool_ingreso,ingreso: float,title)-> list[Film]:
-    print("hi")
     elements = []
     if bool_year and bool_ingreso and per:
         for film in search_in_tree():
-            if ((year == film.year) and (film.dpe < film.fpe) and (film.fe >= ingreso) and title.lower() in film.title.lower()):
+            if ((year == film.year) and (film.dpe < film.fpe) and (float(film.fe) >= float(ingreso)) and title.lower() in film.title.lower()):
                 elements.append(film)
     elif bool_year and not bool_ingreso and per:
         for film in search_in_tree():
@@ -28,7 +29,7 @@ def search_filter(bool_year,year: int, per: bool, bool_ingreso,ingreso: float,ti
                 elements.append(film)
     elif bool_year and bool_ingreso and not per:
         for film in search_in_tree():
-            if ((year == film.year) and (film.fe >= ingreso) and title.lower() in film.title.lower()):
+            if ((year == film.year) and (float(film.fe) >= float(ingreso)) and title.lower() in film.title.lower()):
                 elements.append(film)
     elif bool_year and not bool_ingreso and not per:
          for film in search_in_tree():
@@ -36,12 +37,19 @@ def search_filter(bool_year,year: int, per: bool, bool_ingreso,ingreso: float,ti
                 elements.append(film)
     elif not bool_year and bool_ingreso and per:
         for film in search_in_tree():
-            if ((film.dpe < film.fpe) and (film.fe >= ingreso) and title.lower() in film.title.lower()):
+            if ((film.dpe < film.fpe) and (float(film.fe) >= float(ingreso)) and title.lower() in film.title.lower()):
+                elements.append(film)
+    elif not bool_year and bool_ingreso and not per:
+        for film in search_in_tree():
+            if ((float(film.fe) >= float(ingreso)) and title.lower() in film.title.lower()):
+                elements.append(film)
+    elif not bool_year and not bool_ingreso and per:
+        for film in search_in_tree():
+            if ((film.dpe < film.fpe) and title.lower() in film.title.lower()):
                 elements.append(film)
     else:
         for film in search_in_tree():
             if (title.lower() in film.title.lower()):
                 elements.append(film)
-                print(film.title)
     return elements
 

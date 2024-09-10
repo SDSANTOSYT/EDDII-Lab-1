@@ -330,31 +330,4 @@ class AVLT(BST):
             node = self.find_parent(node)
         return level
 
-    # Función para visualizar el arbol en consola (QUITAR DESPUES)
-    def __repr__(self):
-        return self.__print_tree(self.root)
-
-    def __print_tree(self, node, level=0, side="root"):
-        if node is None:
-            return ""
-        
-        indent = " " * 4 * level
-
-        # Define colors
-        color_reset = "\033[0m"
-        color_root = "\033[1;32m"    
-        color_left = "\033[1;34m"    
-        color_right = "\033[1;31m"   
-        color_title = "\033[1;37m"   
-
-        if side == "root":
-            result = f"{indent}{color_root}(root){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
-        elif side == "left":
-            result = f"{indent}{color_left}(left){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
-        else:  # right
-            result = f"{indent}{color_right}(right){color_reset} -> {color_title}{node.data.title}{color_reset} {node.balance}\n"
-        
-        result += self.__print_tree(node.left, level + 1, "left")
-        result += self.__print_tree(node.right, level + 1, "right")
-        
-        return result
+   

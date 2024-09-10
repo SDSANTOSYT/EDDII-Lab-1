@@ -10,7 +10,6 @@ def search_movie(title: str) -> list[Film] :
         next(reader)
         for line in reader:
             if title.lower() in line[0].lower():
-                print(line)
                 films.append(Film(line[0],line[1],line[2],line[3],line[4],line[5],line[6]))
         return films
 
